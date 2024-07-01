@@ -54,19 +54,39 @@
 
 
 const http = require('http');
-
+const path = require('path');
+const fs = require('fs');
+// Create an HTTP server
 const server = http.createServer(function(req, res) {
     res.setHeader('Content-Type', 'text/html');
 
-    res.write('<html> <head> <title> Node App </title>   </head>   <body>     <h1>Welcome to my Node App!</h1>   </body> </html>');
-    
-    res.end();
+    if (req.url === '/login') {
+        res.write('<html> <head> <title> Login Page </title> </head> <body> <h1>Welcome to Login Page!</h1> </body> </html>');
+        res.end();
+    } else {
+        const filePath = path.join(__dirname, 'index.html');
+        
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                res.statusCode = 500;
+                res.write('<html> <head> <title> Error </title> </head> <body> <h1>Internal Server Error</h1> </body> </html>');
+                res.end();
+            } else {
+                res.write(data);
+                res.end();
+            }
+        });
+    }
 });
 
+// Define the port and hostname
 const port = 3000;
 const hostname = 'localhost';
 
+// Start the server and listen on the specified port and hostname
 server.listen(port, hostname, () => {
     console.log(`Server is running at http://${hostname}:${port}`);
-});   
+});
+
+
 
