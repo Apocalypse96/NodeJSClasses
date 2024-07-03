@@ -24,6 +24,25 @@ app.post('/courses', function(req, res) {
     res.send(course);
 });
 
+app.put('/courses/:id', function(req, res) {
+    let course = courses.find(c => c.id === parseInt(req.params.id));
+    if (!course) {
+        return res.status(404).send('The course with the given ID was not found!');
+    }
+    course.name = req.body.name;
+    res.send(course);
+});
+
+app.delete('/courses/:id', function(req, res) {
+    let course = courses.find(c => c.id === parseInt(req.params.id));
+    if (!course) {
+        return res.status(404).send('The course with the given ID was not found!');
+    }
+    let index = courses.indexOf(course);
+    courses.splice(index, 1);
+    res.send(course);
+});
+
 
 app.listen(3000, () => {
     console.log('Server is running at http://localhost:3000');
